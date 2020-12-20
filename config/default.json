@@ -1,6 +1,0 @@
-{
-    "port": 5000, 
-    "mongoURI": "mongodb+srv://alek:az905467@cluster0.7xkbp.mongodb.net/app?retryWrites=true&w=majority",
-    "jwtSecret": "Hare Krsna Hare Krsna Krsna Krsna Hare Hare Hare Rama Hare Rama Rama Rama Hare Hare", 
-    "baseURL": "http://localhost:5000"
-}
