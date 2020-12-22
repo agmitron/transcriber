@@ -12,9 +12,9 @@
 // * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 import Vue from 'vue'
-import App from './App.vue'
+import App from './App'
 import router from './router'
-import store from './store'
+import store from './store.ts'
 import './plugins/base'
 import './plugins/chartist'
 import './plugins/vee-validate'

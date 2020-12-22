@@ -58,5 +58,17 @@ export default new Router({
         },
       ],
     },
+    // Login
+    {
+      name: 'Login',
+      path: '/login',
+      component: () => import('@/views/pages/Login'),
+    },
+    // Register
+    {
+      name: 'Register',
+      path: '/register',
+      component: () => import('@/views/pages/Register'),
+    },
   ],
 })

@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
+const path = require('path')
+
 module.exports = {
   devServer: {
     disableHostCheck: true,
@@ -11,6 +14,13 @@ module.exports = {
       fallbackLocale: 'en',
       localeDir: 'locales',
       enableInSFC: false,
+    },
+  },
+  configureWebpack: {
+    resolve: {
+      alias: {
+        '@/API': path.resolve(__dirname, 'src/API'),
+      },
     },
   },
 }

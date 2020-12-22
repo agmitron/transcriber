@@ -1,14 +1,25 @@
 module.exports = {
+  parser: 'vue-eslint-parser',
+  parserOptions: {
+    parser: '@typescript-eslint/parser',
+  },
   root: true,
   env: {
     node: true,
   },
-  extends: 'vuetify',
+  extends: [
+    'plugin:@typescript-eslint/recommended',
+    'plugin:vue/recommended',
+    'vuetify',
+  ],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'space-before-function-paren': 'off',
+    '@typescript-eslint/explicit-module-boundary-types': 'off'
   },
-  parserOptions: {
-    parser: 'babel-eslint',
-  },
+  plugins: [
+    'vue',
+    '@typescript-eslint'
+  ]
 }
