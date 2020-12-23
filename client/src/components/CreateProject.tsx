@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -18,6 +18,9 @@ import {
 } from "@material-ui/core";
 import { languageList, engineList } from "../helpers";
 import { useAuth } from "../hooks/useAuth";
+import AuthContext from "../context/AuthContext";
+import { useHistory } from "react-router-dom";
+import ProjectCard from "./Card";
 
 const StyledButton = withStyles({
   root: {
@@ -35,19 +38,18 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function CreateProject() {
-  const { token } = useAuth();
-  const [selectedLangAndEngine, setLangAndEngine] = useState<string>("");
-
+  const [isLoading, setLoading] = useState(false);
+  const [transcriberResult, setTranscriberResult] = useState<string>("");
+  const [isSent, setIsSent] = useState<boolean>(false);
+  const { token } = useContext(AuthContext);
   const classes = useStyles();
-
-  const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
-    setLangAndEngine(e.target.value as string);;
-  };
 
   const sendToTranscibe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const body = new FormData(e.currentTarget);
 
+    setIsSent(true);
+    setLoading(true);
     const response = await fetch("/api/projects/", {
       method: "POST",
       body,
@@ -55,7 +57,10 @@ export default function CreateProject() {
         authorization: `Bearer ${token}`,
       },
     });
-    const result = await response.json();
+
+    const { result } = await response.json();
+    setTranscriberResult(result);
+    setLoading(false);
     console.log({ result });
   };
   return (
@@ -89,7 +94,11 @@ export default function CreateProject() {
               <InputLabel htmlFor="grouped-select">
                 Выберите движок и язык
               </InputLabel>
-              <Select defaultValue="" id="grouped-select" name="engine_and_lang">
+              <Select
+                defaultValue=""
+                id="grouped-select"
+                name="engine_and_lang"
+              >
                 <MenuItem value="">
                   <em>None</em>
                 </MenuItem>
@@ -97,7 +106,8 @@ export default function CreateProject() {
                 <MenuItem value="wit_en">English</MenuItem>
                 <MenuItem value="wit_ru">Русский</MenuItem>
                 <ListSubheader>Yandex</ListSubheader>
-                <MenuItem value="yandex_ru">Русский</MenuItem>
+                {/* TODO */}
+                <MenuItem value="wit_ru">Русский</MenuItem>
               </Select>
             </FormControl>
             <Button type="submit" variant="contained" color="primary">
@@ -106,6 +116,14 @@ export default function CreateProject() {
           </Grid>
         </Grid>
       </form>
+
+      {isSent && (
+        <ProjectCard
+          isLoading={isLoading}
+          text={transcriberResult}
+          title="Project"
+        />
+      )}
     </Container>
   );
 }
