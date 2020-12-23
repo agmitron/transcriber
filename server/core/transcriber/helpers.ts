@@ -12,3 +12,8 @@ export interface IWitAIResponse {
 export interface IAudioFile {
     path: string
 }
+
+export enum TranscriberTypeEnum {
+    Yandex = 'transcriber_yandex',
+    WitAI = 'transcriber_wit.ai',
+}

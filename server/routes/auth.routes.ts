@@ -24,7 +24,7 @@ router.post(
                 })
             }
 
-            const { name, nickname, password, email } = req.body
+            const { full_name, login, password, email } = req.body
 
             const candidate = await User.findOne({ email })
 
@@ -32,14 +32,17 @@ router.post(
                 return res.status(400).json({ message: 'Such user already exists' })
             }
 
-            const hashedPassword = await bcrypt.hash(password, 12)
-            const user = new User({ email, password: hashedPassword, nickname, name })
             
+            const hashedPassword = await bcrypt.hash(password, 12)
+            const user = new User({
+                email, password: hashedPassword, login, full_name
+            })
+
             await user.save()
 
             return res.status(201).json({ message: 'User was succesfully created' })
         } catch (e) {
-            res.status(500).json({ message: 'Something went wrong, try again' })
+            res.status(500).json({ message: e.message })
         }
     }
 )
@@ -67,7 +70,7 @@ router.post(
             const user = await User.findOne({ email })
 
             if (!user) {
-                return res.status(400).json({ message: 'Such user was\'t found' })
+                return res.status(400).json({ message: 'Such user wasn\'t found' })
             }
 
             const isMatch = await bcrypt.compare(password, user.password)
@@ -79,13 +82,13 @@ router.post(
             const token = jwt.sign(
                 { userID: user.id },
                 config.get('jwtSecret'),
-                { expiresIn: '1h' }
+                { expiresIn: '2h' }
             )
 
             res.json({ token, userID: user.id, email })
 
         } catch (e) {
-            res.status(500).json({ message: 'Something went wrong, try again' })
+            res.status(500).json({ message: e.message })
         }
     }
 )

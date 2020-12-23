@@ -51,7 +51,7 @@ export class WitAI extends Transcriber {
                     return resolve(value)
                 })
             })
-                .then(async (value) => await this.sendToSTTService(value))
+                .then(async value => await this.sendToSTTService(value))
                 .catch(e => console.error(`WitAI.trancribe file reading error: ${e}`))
         }
 
@@ -64,7 +64,7 @@ export class WitAI extends Transcriber {
     private static getHeaders(language: string) {
         return {
             'Accept': 'audio/x-mpeg-3',
-            'Authorization': `Bearer ${this.tokens[language]}`,
+            'Authorization': `Bearer ${this.tokens[language.toUpperCase()]}`,
             'Content-Type': 'audio/mpeg3',
             'Transfer-Encoding': 'chunked'
         }
