@@ -1,7 +1,9 @@
 import { WitAI } from './WitAI/WitAI';
+import YandexASR from './Yandex/YandexASR'
 
-export const transcribers = {
+const transcribers = {
     wit: WitAI,
-    // yandex: Yandex... 
-    // amazon: Amazon...
+    yandex: YandexASR
 }
+
+export default transcribers

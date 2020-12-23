@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express'
 import path from 'path'
 import { v4 as uuid } from 'uuid'
+import transcribers from '../core/transcriber/transcribers'
 import { WitAI } from '../core/transcriber/WitAI/WitAI'
 import Project from '../models/Project'
 import User from '../models/User';
@@ -53,13 +54,15 @@ router.post('/', ...[authMiddleware, uploadMiddleware], async (req: Request, res
 
         console.log({ userID })
 
-        const [engine, lang] = engine_and_lang.split('_')
+        const [engine, lang] = engine_and_lang.split('_') as [keyof typeof transcribers, string]
         const filePath = path.resolve(resolveOrCreate('storage', 'users', userID), file.filename)
         console.log({ filePath })
-        const text = await WitAI.transcribe(filePath, lang)
+
+        const transcriber = transcribers[engine]
+        const text = await transcriber.transcribe(filePath, lang)
 
         const author = userID
-        console.log({ author })
+        
         const project = new Project({
             title,
             text,
