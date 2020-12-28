@@ -1,4 +1,5 @@
 import path from 'path'
+import ffmpeg from 'fluent-ffmpeg'
 import fs from 'fs'
 
 export async function clearDir(pathToDir: string) {
@@ -38,4 +39,23 @@ export function resolveOrCreate(...pathStrings: string[]) {
     fs.mkdirSync(p, { recursive: true })
     console.log('Directory was created: ', p)
     return p
+}
+
+export const convertToOgg = async (filePath: string) => {
+    const inputFormat = filePath.split('.')[1]
+    const outputPath = filePath.substr(0, filePath.lastIndexOf('.')) + '.ogg'
+    
+    return new Promise<string>((resolve, reject) => ffmpeg(filePath)
+        .inputFormat(inputFormat)
+        .audioCodec('opus')
+        .on('end', () => {
+            console.log('conversion complete')
+            resolve(outputPath)
+        })
+        .on('err', err => {
+            console.error('error: ', err)
+            reject(err)
+        })
+        .save(outputPath)
+    )
 }

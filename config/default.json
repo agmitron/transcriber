@@ -1,6 +1,0 @@
-{
-    "port": 5000, 
-    "mongoURI": "mongodb://localhost",
-    "jwtSecret": "Hare Krsna Hare Krsna Krsna Krsna Hare Hare Hare Rama Hare Rama Rama Rama Hare Hare", 
-    "baseURL": "http://localhost:5000"
-}

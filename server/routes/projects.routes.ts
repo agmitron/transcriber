@@ -52,17 +52,14 @@ router.post('/', ...[authMiddleware, uploadMiddleware], async (req: Request, res
         const { title, engine_and_lang }: ProjectUploadData = req.body
         const { file } = req
 
-        console.log({ userID })
-
         const [engine, lang] = engine_and_lang.split('_') as [keyof typeof transcribers, string]
         const filePath = path.resolve(resolveOrCreate('storage', 'users', userID), file.filename)
-        console.log({ filePath })
 
         const transcriber = transcribers[engine]
         const text = await transcriber.transcribe(filePath, lang)
 
         const author = userID
-        
+
         const project = new Project({
             title,
             text,

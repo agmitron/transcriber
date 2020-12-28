@@ -15,7 +15,7 @@ export async function audioSplitter(inputPath: string, sections: string) {
     const randomName = `${Math.random().toString(36).substring(7)}-${Date.now()}.${ext}`
     const outputPath = path.resolve('storage', 'temp', randomName)
 
-    await new Promise(resolve => {
+    await new Promise<void>(resolve => {
         ffmpeg(inputPath)
             .inputOptions([`-ss ${start}`])
             .outputOptions([ `-t ${duration}` ])

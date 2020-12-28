@@ -106,8 +106,7 @@ export default function CreateProject() {
                 <MenuItem value="wit_en">English</MenuItem>
                 <MenuItem value="wit_ru">Русский</MenuItem>
                 <ListSubheader>Yandex</ListSubheader>
-                {/* TODO */}
-                <MenuItem value="wit_ru">Русский</MenuItem>
+                <MenuItem value="yandex_ru">Русский</MenuItem>
               </Select>
             </FormControl>
             <Button type="submit" variant="contained" color="primary">

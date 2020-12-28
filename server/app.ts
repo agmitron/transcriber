@@ -1,4 +1,7 @@
 import express from 'express'
+import ffmpeg from 'fluent-ffmpeg'
+// @ts-ignore
+import ffmpegInstaller from '@ffmpeg-installer/ffmpeg'
 import path from 'path'
 import config from 'config'
 import mongoose from 'mongoose'
@@ -8,7 +11,6 @@ import authRoutes from './routes/auth.routes'
 const app = express()
 // Add headers
 app.use((req, res, next) => {
-
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:80')
 
@@ -24,10 +26,13 @@ app.use((req, res, next) => {
 
     // Pass to next layer of middleware
     next()
-});
+})
+
 app.use(express.json())
 app.use('/api/auth', authRoutes)
 app.use('/api/projects', projectsRoutes)
+
+ffmpeg.setFfmpegPath(ffmpegInstaller.path)
 
 // returns static (react app, styles, etc)
 if (process.env.NODE_ENV === 'production') {
