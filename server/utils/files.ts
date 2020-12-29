@@ -43,10 +43,13 @@ export function resolveOrCreate(...pathStrings: string[]) {
 
 export const convertToOgg = async (filePath: string) => {
     const inputFormat = filePath.split('.')[1]
-    const outputPath = filePath.substr(0, filePath.lastIndexOf('.')) + '.ogg'
-    
+
+    const outputPath = changeExtInFileName(filePath, 'ogg')
+    console.log({ inputFormat, outputPath })
+
     return new Promise<string>((resolve, reject) => ffmpeg(filePath)
         .inputFormat(inputFormat)
+        .toFormat('ogg')
         .audioCodec('opus')
         .on('end', () => {
             console.log('conversion complete')
@@ -56,6 +59,9 @@ export const convertToOgg = async (filePath: string) => {
             console.error('error: ', err)
             reject(err)
         })
-        .save(outputPath)
+        .saveToFile(outputPath)
     )
 }
+
+export const changeExtInFileName = (filename: string, newExt: string) => 
+    filename.substr(0, filename.lastIndexOf('.')) + `.${newExt}`

@@ -29,3 +29,5 @@ export function secondsToHHMMSS(secondsSummary: number): string {
 export function createRange(from: string, to: string) {
     return `${from} - ${to}`
 }
+
+export const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
