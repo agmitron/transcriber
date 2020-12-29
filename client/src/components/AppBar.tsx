@@ -1,18 +1,15 @@
 import React, { useContext } from "react";
+import { NavLink } from "react-router-dom";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import IconButton from "@material-ui/core/IconButton";
-import MenuIcon from "@material-ui/icons/Menu";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import Switch from "@material-ui/core/Switch";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormGroup from "@material-ui/core/FormGroup";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import { useAuth } from "../hooks/useAuth";
-import AuthContext from '../context/AuthContext';
+import AuthContext from "../context/AuthContext";
+import { PlusOne, List } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -47,18 +44,27 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="menu"
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Typography variant="h6" className={classes.title}>
-            Photos
+            Transcribarium
           </Typography>
-
+          <NavLink to="/" style={{ color: "white" }}>
+            <IconButton aria-label="Add new project" color="inherit">
+              <PlusOne />
+            </IconButton>
+          </NavLink>
+          <NavLink to="/projects" style={{ color: "white" }}>
+            <IconButton aria-label="All projects" color="inherit">
+              <List />
+            </IconButton>
+          </NavLink>
           <div>
             <IconButton
               aria-label="account of current user"

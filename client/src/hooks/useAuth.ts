@@ -7,7 +7,7 @@ export interface IUserData {
     userID: string
 }
 
-export const useAuth = () => {
+export const useAuth =  () => {  
     const [token, setToken] = useState<string>('')
     const [userID, setUserID] = useState<string>('')
 
@@ -23,18 +23,10 @@ export const useAuth = () => {
         }))
     }, [])
 
-    const logout = useCallback(() => {
-        setToken('')
-        setUserID('')
-
-        localStorage.removeItem(storageName)
-        window.location.replace('/')
-    }, [])
-
     useEffect(() => {
         try {
             const json = localStorage.getItem(storageName) || null
-            
+
             if (!json) {
                 throw new Error('Failed to login')
             }
@@ -49,6 +41,16 @@ export const useAuth = () => {
             console.error(e)
         }
     }, [login])
+
+    const logout = useCallback(() => {
+        setToken('')
+        setUserID('')
+
+        localStorage.removeItem(storageName)
+        window.location.replace('/')
+    }, [])
+
+
 
     return { login , logout, token, userID }
 }

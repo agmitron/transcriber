@@ -27,7 +27,7 @@ const useStyles = makeStyles({
 interface IProjectCardProps {
   title: string;
   text: string;
-  isLoading: boolean;
+  isLoading?: boolean;
 }
 
 export default function ProjectCard(props: IProjectCardProps) {

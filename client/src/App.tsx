@@ -4,11 +4,10 @@ import "./App.css";
 import { useAuth } from "./hooks/useAuth";
 import AuthContext from "./context/AuthContext";
 import { useRoutes } from "./routes";
-import MenuAppBar from './components/AppBar';
+import MenuAppBar from "./components/AppBar";
 
 function App() {
   const { token, login, logout, userID } = useAuth();
-
   const isAuthenticated = !!token;
   const routes = useRoutes(isAuthenticated);
   return (
@@ -16,8 +15,10 @@ function App() {
       <AuthContext.Provider
         value={{ token, login, logout, userID, isAuthenticated }}
       >
-        {isAuthenticated && <MenuAppBar />}
-        <Router>{routes}</Router>
+        <Router>
+          {isAuthenticated && <MenuAppBar />}
+          {routes}
+        </Router>
       </AuthContext.Provider>
     </>
   );
