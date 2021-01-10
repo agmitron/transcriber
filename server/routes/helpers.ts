@@ -17,7 +17,7 @@ export const TOKEN_PROPERTY = 'user'
 export const getJWTfromRequest = (request: Request): IJWTTokenPayload => (request as any)[TOKEN_PROPERTY]
 interface IJWTTokenPayload {
     userID: string
-    iat: number 
+    iat: number
     exp: number
 }
 export interface IProtectedRequest extends Request {
@@ -27,9 +27,16 @@ export interface IProtectedRequest extends Request {
 export const authMiddleware = ejwt({
     secret: config.get('jwtSecret'),
     getToken(req) {
-        if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-            return req.headers.authorization.split(' ')[1]
-        } else if (req.query && req.query.token) {
+        const bearer =
+            req.headers.authorization?.split(' ')[0] === 'Bearer'
+                ? req.headers.authorization?.split(' ')[1]
+                : false
+                
+        if (bearer) {
+            return bearer
+        }
+
+        if (req.query?.token) {
             return req.query.token
         }
 

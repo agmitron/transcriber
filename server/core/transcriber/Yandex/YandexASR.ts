@@ -59,7 +59,9 @@ export default class YandexASR extends Transcriber {
                 {
                     headers: {
                         Authorization: `Api-Key ${secret}`
-                    }
+                    },
+                    maxBodyLength: Infinity,
+                    maxContentLength: Infinity
                 }
             )
 
@@ -69,11 +71,6 @@ export default class YandexASR extends Transcriber {
             const duration = (await getAudioDurationInSeconds(filePath)) * 100 // ~ (* 1000 / 10)
             await sleep(duration)
             const { result } = await this.getResult(data.id)
-            console.log({ result })
-            // if (done) {
-            //     console.log('Done!!!')
-
-            // }
 
             return result
         } catch (e) {
@@ -85,7 +82,6 @@ export default class YandexASR extends Transcriber {
         try {
             const convertedPath = await convertToOgg(filePath)
             const baseName = path.basename(convertedPath)
-            console.log({ convertedPath })
             const form = new FormData()
             form.append('key', baseName)
             form.append('file', createReadStream(convertedPath), baseName)
@@ -93,7 +89,12 @@ export default class YandexASR extends Transcriber {
             await axios.post(
                 `https://storage.yandexcloud.net/transcribarium.com`,
                 form,
-                { headers: form.getHeaders() }
+                {
+                    headers: form.getHeaders(),
+                    maxBodyLength: Infinity,
+                    maxContentLength: Infinity
+                },
+
             )
 
             return `https://storage.yandexcloud.net/transcribarium.com/${baseName}`
@@ -110,7 +111,9 @@ export default class YandexASR extends Transcriber {
             {
                 headers: {
                     Authorization: `Api-Key ${secret}`
-                }
+                },
+                maxBodyLength: Infinity,
+                maxContentLength: Infinity
             }
         )
 
@@ -120,6 +123,7 @@ export default class YandexASR extends Transcriber {
         }
 
         if (data?.response) {
+            console.log({ response: data.response })
             const result = this.concatResultChunks(data.response.chunks)
 
             return {
@@ -134,6 +138,12 @@ export default class YandexASR extends Transcriber {
     public static concatResultChunks =
         (chunks: IYandexASRResultResponse['response']['chunks']) =>
             chunks
-                .map(ch => ch.alternatives[0].text)
+                .map((ch, i) => {
+                    if (i > 0 && ch.alternatives[0].text === chunks[i - 1].alternatives[0].text) {
+                        return ''
+                    }
+
+                    return ch.alternatives[0].text
+                })
                 .join(' ')
 }

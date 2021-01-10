@@ -32,7 +32,7 @@ router.post(
                 return res.status(400).json({ message: 'Such user already exists' })
             }
 
-            
+
             const hashedPassword = await bcrypt.hash(password, 12)
             const user = new User({
                 email, password: hashedPassword, login, full_name
@@ -79,10 +79,12 @@ router.post(
                 return res.status(400).json({ message: 'Incorrect password' })
             }
 
+            const expiresIn = '2h'
+
             const token = jwt.sign(
                 { userID: user.id },
                 config.get('jwtSecret'),
-                { expiresIn: '2h' }
+                { expiresIn }
             )
 
             res.json({ token, userID: user.id, email })
