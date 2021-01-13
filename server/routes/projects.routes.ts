@@ -32,12 +32,13 @@ router.get('/', authMiddleware, async (req: Request, res: Response) => {
 // /api/projects/123
 // /api/projects/13
 // /api/projects/1 ...
-router.get('/:id', async (req: Request, res: Response) => {
+router.get('/:id', authMiddleware, async (req: Request, res: Response) => {
     const { id } = req.params
     try {
-        const project = await Project.findById(id)
+        const { userID } = getJWTfromRequest(req);
+        const project = await Project.findOne({ _id: id, author: userID })
 
-        return res.status(201).json({ message: 'Project was found', project })
+        return res.status(200).json({ message: 'Project was found', project })
     } catch (e) {
         console.error(`Can't find project with id ${id}. See full error: ${e}`)
         return res.status(500).json({ message: `Can't find project with id ${id}. See full error: ${e}` })
@@ -76,6 +77,35 @@ router.post('/', ...[authMiddleware, uploadMiddleware], async (req: Request, res
     } catch (e) {
         console.error(`Project Route error: ${e}`)
         return res.status(500).json({ message: `${e}` })
+    }
+})
+
+router.put('/:id', authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params
+        const { userID } = getJWTfromRequest(req);
+
+        const project = await Project.findOneAndUpdate(
+            { _id: id, author: userID },
+            { ...req.body },
+            { useFindAndModify: false, new: true }
+        )
+
+        if (!project) {
+            return res.status(404).send({
+                message: 'No such project.'
+            })
+        }
+
+        return res.status(200).send({
+            message: 'Project was updated.',
+            result: await project.save()
+        })
+
+    } catch (e) {
+        return res.status(500).send({
+            message: e.message
+        })
     }
 })
 
