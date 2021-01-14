@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import AuthContext from "../context/AuthContext";
-import MessagesContext from "../context/MessagesContext";
+import { useMessages } from "../context/MessagesContext";
 
 interface IProjectProps {
   id: string;
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 const Project: React.FC<IProjectProps> = (props) => {
   const classes = useStyles();
   const { token, checkIsJWTExpired } = useContext(AuthContext);
-  const { pushMessage, currentMessage } = useContext(MessagesContext);
+  const { pushMessage, currentMessage } = useMessages();
 
   const [projectState, setProjectState] = useState({
     title: "",
@@ -64,19 +64,25 @@ const Project: React.FC<IProjectProps> = (props) => {
   }, [token]);
 
   const editProject = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const response = await fetch(`/api/projects/${props.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(projectState),
-    });
+    try {
+      e.preventDefault();
+      const response = await fetch(`/api/projects/${props.id}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(projectState),
+      });
 
-    const result = await response.json();
-
-    console.log({ result });
+      const result = await response.json();
+      if (pushMessage) {
+        pushMessage({ text: result.message, type: "success" });
+      }
+    } catch (e) {
+      pushMessage({ text: e.message, type: "error" });
+      return console.error(e)
+    }
   };
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -5,22 +5,21 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import {Link} from 'react-router-dom'
+import { Link, useHistory } from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
-import { IUserData } from '../hooks/useAuth';
+import { IUserData } from "../hooks/useAuth";
+import { useMessages } from "../context/MessagesContext";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link to="http://transcribarium.com">
-        transcribarium.com
-      </Link>{" "}
+      <Link to="http://transcribarium.com">transcribarium.com</Link>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -50,36 +49,49 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp() {
   const classes = useStyles();
   const [form, setForm] = useState({
-    full_name: '',
-    login: '',
-    password: '',
-    email: ''
-  })
+    full_name: "",
+    login: "",
+    password: "",
+    email: "",
+  });
 
   const typeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm(prev => ({
-      ...prev, 
-      [e.target.name]: e.target.value
-    }))
-  }
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const { pushMessage } = useMessages();
+  const history = useHistory();
 
   const register = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify({
-        email: form.email,
-        password: form.password,
-        login: form.login,
-        full_name: form.full_name
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      e.preventDefault();
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          login: form.login,
+          full_name: form.full_name,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const result: IUserData = await response.json();
-    console.log({ result });
+      const result: IUserData = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message);
+      }
+
+      pushMessage({ type: "success", text: result.message });
+      history.push("/login");
+    } catch (e) {
+      pushMessage({ type: "error", text: e.message });
+    }
   };
 
   return (
@@ -161,9 +173,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to="/login">
-                Already have an account? Sign in
-              </Link>
+              <Link to="/login">Already have an account? Sign in</Link>
             </Grid>
           </Grid>
         </form>

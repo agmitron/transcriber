@@ -1,28 +1,19 @@
 import S from "@material-ui/core/Snackbar";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MuiAlert from "@material-ui/lab/Alert";
+import { useMessages } from '../context/MessagesContext';
 
-interface ISnackbarProps {
-  message: string;
-  type: "error" | "success";
-}
-
-const Snackbar: React.FC<ISnackbarProps> = (props) => {
-  const [open, setOpen] = useState(true);
-
-  const handleClose = (event: React.SyntheticEvent | React.MouseEvent) => {
-    setOpen(false);
-  };
-
+const Snackbar: React.FC<{}> = () => {
+  const {hideMessage, currentMessage} = useMessages();
   return (
     <S
       anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-      open={open}
+      open={Boolean(currentMessage)}
       autoHideDuration={4000}
-      onClose={handleClose}
+      onClose={hideMessage}
     >
-      <MuiAlert severity={props.type} elevation={6} variant="filled">
-        {props.message}
+      <MuiAlert severity={currentMessage?.type} elevation={6} variant="filled">
+        {currentMessage?.text}
       </MuiAlert>
     </S>
   );

@@ -21,6 +21,7 @@ import { useAuth } from "../hooks/useAuth";
 import AuthContext from "../context/AuthContext";
 import { useHistory } from "react-router-dom";
 import ProjectCard from "./Card";
+import { useMessages } from "../context/MessagesContext";
 
 const StyledButton = withStyles({
   root: {
@@ -50,24 +51,36 @@ export default function CreateProject() {
     checkIsJWTExpired();
   }, [checkIsJWTExpired]);
 
+  const { pushMessage } = useMessages();
+
   const sendToTranscibe = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    checkIsJWTExpired();
-    const body = new FormData(e.currentTarget);
+    try {
+      e.preventDefault();
+      checkIsJWTExpired();
+      const body = new FormData(e.currentTarget);
 
-    setIsSent(true);
-    setLoading(true);
-    const response = await fetch("/api/projects/", {
-      method: "POST",
-      body,
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
+      setIsSent(true);
+      setLoading(true);
+      const response = await fetch("/api/projects/", {
+        method: "POST",
+        body,
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
 
-    const { result } = await response.json();
-    setTranscriberResult(result);
-    setLoading(false);
+      const { result, message } = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(message);
+      }
+
+      setTranscriberResult(result);
+      setLoading(false);
+    } catch (e) {
+      pushMessage({ type: "error", text: e.message });
+      console.error(e);
+    }
   };
 
   const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {

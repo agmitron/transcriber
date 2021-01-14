@@ -14,6 +14,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import AuthContext from "../context/AuthContext";
 import { IUserData } from "../hooks/useAuth";
+import { useMessages } from "../context/MessagesContext";
 
 function Copyright() {
   return (
@@ -57,24 +58,31 @@ const SignIn = () => {
     email: "",
     password: "",
   });
-
+  const { pushMessage } = useMessages();
   const { email, password } = loginData;
   const login = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      e.preventDefault();
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const { token, userID }: IUserData = await response.json();
-    console.log('response token: ', token)
-    authMethods.login(token, userID);
+      const { token, userID, message }: IUserData = await response.json();
+      if (!response.ok) {
+        throw new Error(message)
+      }
+      
+      authMethods.login(token, userID);
+    } catch (e) {
+      pushMessage({ type: "error", text: e.message });
+    }
   };
 
   return (

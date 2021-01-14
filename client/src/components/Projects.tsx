@@ -2,7 +2,7 @@ import { Container } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
-import MessagesContext from "../context/MessagesContext";
+import { useMessages } from '../context/MessagesContext';
 import ProjectCard from "./Card";
 import { IProject } from "./Project";
 
@@ -11,7 +11,7 @@ interface IProjectsProps {}
 const Projects: React.FC<IProjectsProps> = (props) => {
   const [projects, setProjects] = useState<IProject[]>([]);
   const { token, checkIsJWTExpired } = useContext(AuthContext);
-  const { pushMessage } = useContext(MessagesContext);
+  const { pushMessage } = useMessages();
 
   useEffect(() => {
     checkIsJWTExpired();
@@ -32,7 +32,7 @@ const Projects: React.FC<IProjectsProps> = (props) => {
         }
       })
       .catch(({ message }) =>
-        pushMessage ? pushMessage({ type: "success", text: message }) : null
+        pushMessage ? pushMessage({ type: "error", text: message }) : null
       );
   }, [token]);
 

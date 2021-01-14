@@ -1,11 +1,13 @@
 import { useState, useCallback, useEffect } from 'react'
 import jwt from 'jsonwebtoken'
+import { useMessages } from '../context/MessagesContext'
 
 const storageName = 'userData'
 
 export interface IUserData {
     userID: string
     token: string
+    message: string
 }
 
 interface IJWTDecodedToken {
@@ -20,9 +22,6 @@ export const useAuth = () => {
     const [userID, setUserID] = useState<string>('')
     const [expiration, setExpiration] = useState<number | null>(null)
 
-
-    console.log({ token, userID })
-
     const login = useCallback((jwtToken: string, id: string) => {
         try {
             setToken(jwtToken)
@@ -35,7 +34,7 @@ export const useAuth = () => {
             }))
 
         } catch (e) {
-            console.error('Failed to login. Try again.')
+            return console.error('Failed to login. Try again.')
         }
     }, [])
 
@@ -78,7 +77,7 @@ export const useAuth = () => {
 
             return false
         } catch (e) {
-            
+
         }
     }, [token, logout])
 
