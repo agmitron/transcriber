@@ -3,13 +3,15 @@ import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import { CircularProgress } from '@material-ui/core';
+import { CircularProgress } from "@material-ui/core";
 
 const useStyles = makeStyles({
   root: {
     minWidth: 275,
     minHeight: 200,
-    marginTop: 20
+    maxHeight: 500,
+    marginTop: 20,
+    paddingBottom: 30,
   },
   bullet: {
     display: "inline-block",
@@ -17,10 +19,18 @@ const useStyles = makeStyles({
     transform: "scale(0.8)",
   },
   title: {
-    fontSize: 14,
+    fontSize: 18,
   },
   pos: {
     marginBottom: 12,
+  },
+  content: {
+    textOverflow: "ellipsis",
+    maxHeight: "100%",
+  },
+  cardContent: {
+    maxHeight: "100%",
+    overflow: "hidden",
   },
 });
 
@@ -35,18 +45,17 @@ export default function ProjectCard(props: IProjectCardProps) {
 
   return (
     <Card className={classes.root}>
-      <CardContent>
+      <CardContent className={classes.cardContent}>
         <Typography
-          className={classes.title}
-          color="textSecondary"
           gutterBottom
+          variant="h5"
         >
           {props.title}
         </Typography>
         {props.isLoading ? (
           <CircularProgress />
         ) : (
-          <Typography variant="body2" component="p">
+          <Typography variant="body2" component="p" className={classes.content}>
             {props.text}
           </Typography>
         )}

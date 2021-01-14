@@ -19,9 +19,7 @@ function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link to="http://transcribarium.com">
-        Your Website
-      </Link>{" "}
+      <Link to="http://transcribarium.com">Your Website</Link>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
@@ -49,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const SignIn = () => {
-  const auth = useContext(AuthContext);
+  const authMethods = useContext(AuthContext);
 
   const classes = useStyles();
   const [loginData, setLoginData] = useState<{
@@ -74,9 +72,9 @@ const SignIn = () => {
       },
     });
 
-    const result: IUserData = await response.json();
-    auth.login(result.token, result.userID);
-    console.log({ result });
+    const { token, userID }: IUserData = await response.json();
+    console.log('response token: ', token)
+    authMethods.login(token, userID);
   };
 
   return (
@@ -133,9 +131,7 @@ const SignIn = () => {
           </Button>
           <Grid container>
             <Grid item>
-              <Link to="/register">
-                {"Don't have an account? Sign Up"}
-              </Link>
+              <Link to="/register">{"Don't have an account? Sign Up"}</Link>
             </Grid>
           </Grid>
         </form>

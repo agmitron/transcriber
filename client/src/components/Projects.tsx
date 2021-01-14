@@ -1,19 +1,22 @@
 import { Container } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { useAuth } from "../hooks/useAuth";
+import React, { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
+import MessagesContext from "../context/MessagesContext";
 import ProjectCard from "./Card";
+import { IProject } from "./Project";
 
 interface IProjectsProps {}
 
-interface IProject {
-  text: string;
-  title: string;
-  // TODO: url link
-}
-
 const Projects: React.FC<IProjectsProps> = (props) => {
   const [projects, setProjects] = useState<IProject[]>([]);
-  const { token } = useAuth();
+  const { token, checkIsJWTExpired } = useContext(AuthContext);
+  const { pushMessage } = useContext(MessagesContext);
+
+  useEffect(() => {
+    checkIsJWTExpired();
+  }, [checkIsJWTExpired]);
+
   useEffect(() => {
     fetch("/api/projects", {
       headers: {
@@ -21,16 +24,26 @@ const Projects: React.FC<IProjectsProps> = (props) => {
       },
     })
       .then((res) => res.json())
-      .then(({ projects }) => {
-        console.log({ projects });
+      .then(({ projects, message }) => {
         setProjects((projects as IProject[]).reverse());
-      });
+
+        if (pushMessage) {
+          pushMessage({ type: "success", text: message });
+        }
+      })
+      .catch(({ message }) =>
+        pushMessage ? pushMessage({ type: "success", text: message }) : null
+      );
   }, [token]);
 
   return (
     <Container>
       {projects.length &&
-        projects.map((p) => <ProjectCard text={p.text} title={p.title} />)}
+        projects.map((p) => (
+          <Link to={`projects/${p._id}`}>
+            <ProjectCard text={p.text} title={p.title} />
+          </Link>
+        ))}
     </Container>
   );
 };

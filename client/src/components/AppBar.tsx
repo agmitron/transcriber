@@ -30,7 +30,6 @@ export default function MenuAppBar() {
   const auth = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  console.log({ auth });
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,14 +43,6 @@ export default function MenuAppBar() {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          {/* <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton> */}
           <Typography variant="h6" className={classes.title}>
             Transcribarium
           </Typography>
@@ -90,7 +81,10 @@ export default function MenuAppBar() {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem onClick={() => auth.logout()}>Logout</MenuItem>
+              <MenuItem>
+                <NavLink to="/profile">Profile</NavLink>
+              </MenuItem>
+              <MenuItem onClick={() => auth.logout()}>Выйти</MenuItem>
             </Menu>
           </div>
         </Toolbar>

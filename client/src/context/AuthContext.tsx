@@ -6,6 +6,7 @@ const AuthContext = createContext({
   login: (jwtToken: string, id: string) => {},
   logout: () => {},
   isAuthenticated: false,
+  checkIsJWTExpired: () => {},
 });
 
 export default AuthContext;

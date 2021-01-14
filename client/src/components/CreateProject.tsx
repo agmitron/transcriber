@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
@@ -41,11 +41,18 @@ export default function CreateProject() {
   const [isLoading, setLoading] = useState(false);
   const [transcriberResult, setTranscriberResult] = useState<string>("");
   const [isSent, setIsSent] = useState<boolean>(false);
+  const [fileData, setFileData] = useState<string>("");
   const { token } = useContext(AuthContext);
   const classes = useStyles();
+  const { checkIsJWTExpired } = useAuth();
+
+  useEffect(() => {
+    checkIsJWTExpired();
+  }, [checkIsJWTExpired]);
 
   const sendToTranscibe = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    checkIsJWTExpired();
     const body = new FormData(e.currentTarget);
 
     setIsSent(true);
@@ -61,8 +68,20 @@ export default function CreateProject() {
     const { result } = await response.json();
     setTranscriberResult(result);
     setLoading(false);
-    console.log({ result });
   };
+
+  const uploadFileHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.currentTarget.files ? e.currentTarget.files[0] : null;
+
+    if (!file) {
+      return;
+    }
+
+    const sizeMiB = (file.size / 1024 / 1024).toFixed(2);
+
+    setFileData(`Название файла: ${file.name}. Размер файла: ${sizeMiB} МБ.`);
+  };
+
   return (
     <Container className="mt-50">
       <Typography variant="h4" gutterBottom>
@@ -87,8 +106,14 @@ export default function CreateProject() {
             <label>
               <StyledButton variant="outlined" color="secondary">
                 Загрузить файл
-                <input type="file" className="file-input" name="file" />
+                <input
+                  type="file"
+                  className="file-input"
+                  name="file"
+                  onChange={uploadFileHandler}
+                />
               </StyledButton>
+              {fileData && <p>{fileData}</p>}
             </label>
             <FormControl className={classes.formControl}>
               <InputLabel htmlFor="grouped-select">
