@@ -24,4 +24,7 @@ All the guide had written for Ubuntu Server Linux
 
   # Run MongoDB
   sudo docker run -p 27017:27017 --name mongodb -d mongo
+  
+  # Start app
+  npm start
 ```
