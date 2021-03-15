@@ -33,7 +33,8 @@ All the guide had written for Ubuntu Server Linux
   ```
     sudo docker start mongodb
   ```
+  
+  ### Start app
 ```
-  # Start app
   npm start
 ```
