@@ -23,7 +23,7 @@ To register, you have to send a POST request like this (pseudocode):
 ```
 
 #### Responses
-**If it's OK and there is no user with such email, you will get a response like this: **
+**If it's OK and there is no user with such email, you will get a response like this**: 
 ```
   Status: 201 Created
   Body: {
@@ -58,7 +58,7 @@ Well, when you are signed up, you will need to sign in and get JWT token to use 
 ```
 
 #### Response
-**OK: **
+**OK**: 
 ```
   Status: 200
   Body: {
@@ -68,7 +68,7 @@ Well, when you are signed up, you will need to sign in and get JWT token to use 
   }
 ```
 
-**Incorrect password or login: **
+**Incorrect password or login**:
 ```
   Status: 400
   Body: {
@@ -104,7 +104,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 ```
 
 #### Response
-**OK: **
+**OK**:
 ```
   Status: 201
   Body: {
@@ -114,7 +114,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 
 ```
 
-**Error: **
+**Error**:
 ```
   Status: 500
   Body: {
@@ -130,7 +130,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 ```
 
 #### Response
-**OK: **
+**OK**:
 ```
   Status: 200
   Body: {
@@ -144,7 +144,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Error: **
+**Error**:
 ```
   Status: 500
   Body {
@@ -161,7 +161,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 ```
 
 #### Response
-**OK: **
+**OK**:
 ```
   Status: 200
   Body: {
@@ -175,7 +175,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Error: **
+**Error**:
 ```
   Status: 500
   Body {
@@ -196,7 +196,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 ```
 
 #### Response
-**OK: **
+**OK**:
 ```
   Status: 200
   Body: {
@@ -210,7 +210,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Error: **
+**Error**:
 ```
   Status: 500
   Body {
@@ -218,7 +218,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Not found: **
+**Not found**:
 ```
   Status: 404
   Body {
@@ -236,7 +236,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 ```
 
 #### Response
-**OK: **
+**OK**:
 ```
   Status: 200
   Body: {
@@ -250,7 +250,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Not found: **
+**Not found**:
 ```
   Status: 404
   Body {
@@ -258,7 +258,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Error: **
+**Error**:
 ```
   Status: 500
   Body {
@@ -281,7 +281,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
 ```
 
 #### Response
-**OK: **
+**OK**:
 ```
   Status: 200
   Body: {
@@ -295,7 +295,7 @@ Well, you have the JWT token now. Use this for transcribing. If you'll try to us
   }
 ```
 
-**Error: **
+**Error**:
 ```
   Status: 500
   Body {
